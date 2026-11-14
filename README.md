@@ -11,6 +11,7 @@ Aplikasi web modern berbasis **Laravel 12** yang dirancang khusus untuk operasio
 - [Struktur Direktori & Database](#-struktur-direktori--database)
 - [Prasyarat Sistem](#-prasyarat-sistem)
 - [Panduan Instalasi & Menjalankan](#-panduan-instalasi--menjalankan)
+- [Panduan Deploy ke Render.com](#-panduan-deploy-ke-rendercom)
 - [Akun Pengelola Default](#-akun-pengelola-default)
 - [Integrasi Payment Gateway (Midtrans)](#-integrasi-payment-gateway-midtrans)
 - [Pengujian (Testing)](#-pengujian-testing)
@@ -183,6 +184,32 @@ php artisan serve
 ```
 Aplikasi kini dapat diakses melalui peramban web di:
 👉 **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+
+---
+
+## ☁️ Panduan Deploy ke Render.com
+
+Proyek ini telah dilengkapi dengan berkas konfigurasi `Dockerfile`, `docker-entrypoint.sh`, dan `render.yaml` untuk kemudahan deploy gratis ke **[Render.com](https://render.com/)**:
+
+### Cara Deploy Otomatis (Blueprint):
+1. Masuk / Daftar akun di **[Render.com](https://render.com/)** (bisa login menggunakan akun GitHub).
+2. Di dashboard Render, klik tombol **New +** lalu pilih **Blueprint**.
+3. Hubungkan repositori GitHub Anda: `Yans-droid/Snack_Shop`.
+4. Render akan otomatis membaca file `render.yaml` dan menyiapkan konfigurasi Docker, PHP 8.4, SQLite, serta aset Vite.
+5. Klik **Apply**. Render akan membangun aplikasi dan memberikan URL publik gratis (contoh: `https://snack-dua-putra.onrender.com`).
+
+### Cara Deploy Manual (Web Service):
+1. Klik **New +** ➔ **Web Service** ➔ pilih repositori `Yans-droid/Snack_Shop`.
+2. Pilih Runtime: **Docker**.
+3. Region: **Singapore** (untuk akses cepat di Indonesia).
+4. Instance Type: **Free**.
+5. Di bagian **Environment Variables**, tambahkan:
+   - `APP_KEY`: *(isi dengan kunci enkripsi Laravel atau klik generate)*
+   - `APP_ENV`: `production`
+   - `APP_DEBUG`: `false`
+   - `DB_CONNECTION`: `sqlite`
+   - `SESSION_DRIVER`: `cookie`
+6. Klik **Deploy Web Service**. Selesai!
 
 ---
 
