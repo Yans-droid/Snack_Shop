@@ -5,4 +5,5 @@ return [
     'midtrans_server_key' => env('MIDTRANS_SERVER_KEY', ''),
     'midtrans_client_key' => env('MIDTRANS_CLIENT_KEY', ''),
     'midtrans_production' => filter_var(env('MIDTRANS_IS_PRODUCTION', false), FILTER_VALIDATE_BOOLEAN),
+    'payment_mock' => filter_var(env('PAYMENT_MOCK', false), FILTER_VALIDATE_BOOLEAN),
 ];

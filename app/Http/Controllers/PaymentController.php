@@ -17,19 +17,25 @@ class PaymentController extends Controller
     public function status(string $code) {
         $o=DB::table('orders')->where('order_code',$code)->where('channel','online')->first();
         abort_unless($o,404);
-        if($o->payment_status==='pending' && config('kriuk.midtrans_server_key')) {
+        // Skip Midtrans API check in mock mode
+        if($o->payment_status==='pending' && config('kriuk.midtrans_server_key') && !config('kriuk.payment_mock')) {
             try {
                 $this->configMidtrans();
                 $r=(array)Transaction::status($code);
                 if((int)round((float)($r['gross_amount']??-1)) === (int)$o->total_amount)
                     KriukCommerce::settle($code,(string)($r['transaction_status']??'pending'),$r['fraud_status']??null);
             }catch(\Throwable $e){
-                // Snap may not have a payment status until a payment method is selected.
                 Log::info('Midtrans status not yet available',['order'=>$code]);
             }
         }
         $now=DB::table('orders')->where('order_code',$code)->first();
-        return response()->json(['code'=>$code,'paymentStatus'=>$now->payment_status,'status'=>$now->status,'receiptUrl'=>$now->payment_status==='paid' && $now->receipt_token ? route('receipt.show',$now->receipt_token) : null]);
+        return response()->json([
+            'code'=>$code,
+            'paymentStatus'=>$now->payment_status,
+            'status'=>$now->status,
+            'mock'=>config('kriuk.payment_mock'),
+            'receiptUrl'=>$now->payment_status==='paid' && $now->receipt_token ? route('receipt.show',$now->receipt_token) : null,
+        ]);
     }
     public function token(string $code) {
         $o=DB::table('orders')->where('order_code',$code)->where('channel','online')->first();

@@ -25,3 +25,6 @@ services:
         sync: false
       - key: MIDTRANS_IS_PRODUCTION
         value: "false"
+      - key: PAYMENT_MOCK
+        value: "false"
+

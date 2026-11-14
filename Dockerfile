@@ -49,3 +49,4 @@ ENV APP_ENV=production \
 EXPOSE 8080
 
 ENTRYPOINT ["docker-entrypoint.sh"]
+

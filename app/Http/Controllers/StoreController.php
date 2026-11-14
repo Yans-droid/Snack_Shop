@@ -59,6 +59,21 @@ class StoreController extends Controller
             'promo_code'=>'nullable|string|max:24','items'=>'required|array|min:1|max:30',
             'items.*.key'=>'required|string|max:90','items.*.qty'=>'required|integer|min:1|max:50',
         ]);
+
+        // ─── Mock Payment Mode ───
+        if (config('kriuk.payment_mock')) {
+            $o=KriukCommerce::create($d,$d['items']);
+            // Set snap_token ke 'mock' agar halaman order tahu ini mock
+            DB::table('orders')->where('id',$o['id'])->update(['snap_token'=>'mock']);
+            return response()->json([
+                'code'=>$o['code'],
+                'token'=>'mock',
+                'total'=>$o['total'],
+                'mock'=>true,
+            ]);
+        }
+
+        // ─── Real Midtrans ───
         if(!config('kriuk.midtrans_server_key') || !config('kriuk.midtrans_client_key')) {
             return response()->json(['message'=>'Metode pembayaran online sedang disiapkan. Silakan hubungi pengelola toko.'],503);
         }

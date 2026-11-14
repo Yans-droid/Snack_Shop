@@ -13,3 +13,4 @@ storage/framework/views/*
 database/*.sqlite
 database/*.sqlite-journal
 tests
+

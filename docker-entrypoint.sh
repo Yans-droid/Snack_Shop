@@ -33,3 +33,4 @@ PORT="${PORT:-8080}"
 echo "Snack Dua Putra siap dan berjalan pada port $PORT..."
 
 exec php artisan serve --host=0.0.0.0 --port="$PORT"
+

@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MockPaymentController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -20,6 +21,12 @@ Route::get('/api/pesanan/{code}/pay', [PaymentController::class, 'token'])->midd
 Route::post('/midtrans/notification', [PaymentController::class, 'webhook'])
     ->withoutMiddleware([ValidateCsrfToken::class]);
 Route::get('/struk/{token}', [ReceiptController::class, 'show'])->name('receipt.show');
+
+// Mock payment routes (hanya aktif saat PAYMENT_MOCK=true)
+if (config('kriuk.payment_mock')) {
+    Route::post('/mock-payment/settle/{code}', [MockPaymentController::class, 'settle'])
+        ->name('mock.settle');
+}
 
 // Login penjual: sesi Laravel, terpisah dari toko depan
 Route::get('/admin/login', [AdminController::class, 'loginView'])->name('admin.login');
